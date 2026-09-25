@@ -6,17 +6,17 @@ a=imread('image777.jpg');
 
 d=rgb2gray(a);    % Convert to Gray scale Image
 
-e=double(d);      % COnvert to Double format matrix
+e=double(d);      % CConvert to Double format matrix
 
 R=size(d,1);      % Number of Rows in the Image
 C=size(d,2);      % Number of Columns in the Image
-l=ones(R,C);      % Unit Matrix equalent to the dimensions of Input Image
+l=ones(R,C);      % Unit Matrix equivalent to the dimensions of Input Image
 
-%% Step 1: Gaussian Smooting 
+%% Step 1: Gaussian Smoothing 
 
 s=1.4142;    % Sigma Value 
 
-% Calculating 3x3 Gaussian Kernal Coefficients
+% Calculating 3x3 Gaussian Kernel Coefficients
 k=zeros(3);
 for i=-1:1
     for j=-1:1     
@@ -39,7 +39,6 @@ l2 = convolution(s2,e,l,R,C);
 l3 = convolution(s3,e,l,R,C);
 l4 = convolution(s4,e,l,R,C);
 
-L=l1+l2;  % Gx +Gy
 
 % Gradient Magnitude Calculation
 M=sqrt(l1.^2+l2.^2);
@@ -49,7 +48,7 @@ A=atand(l2./(l1+0.0000001));
 
 GN=zeros(R,C);
 
-%% Step 3: Nonmaxima Supression
+%% Step 3: Nonmaxima Suppression
 
 for i=1:R
     for j=1:C
@@ -415,7 +414,7 @@ GlN=GN>=140;   % Low Threshold  for Strong + Weak Edges
 GlN=logical(GlN-GhN);   % for Weak Edegs 
 
 
-%% Step 5: 8 way Conectivity
+%% Step 5: 8 way Connectivity
 
 
 GG1=logical(connect8(GlN,GhN,R,C));    % unvisited pixels in Strong Edges
@@ -447,25 +446,25 @@ subplot(1,2,1);imshow(uint8(abs(l3)));title('+45 Gradient','Fontsize',20);
 subplot(1,2,2);imshow(uint8(abs(l4)));title('-45 Gradient','Fontsize',20);
 
 
-figure;
+figure('Name','Magnitude of Gradient and Direction of Gradient');
 subplot(1,2,1);imshow(uint8(M));title('Magnitude of Gradient','Fontsize',20);
 subplot(1,2,2);imshow(uint8(A));title('Direction of Gradient','Fontsize',20);
 
-figure;
+figure('Name','Non-maxima Supression');
 subplot(1,2,1);imshow(uint8(M));title('Magnitude of Gradient','Fontsize',20);
 subplot(1,2,2);imshow(uint8(GN));title('Non-maxima Supressed Image','Fontsize',20); % NonMaxima Supressed Image
 
  
-figure;
+figure('Name','Strong Edges and Weak Edges');
 subplot(1,2,1);imshow((GhN));title('Strong Edges','Fontsize',20);
 subplot(1,2,2);imshow((GlN));title('Weak Edges','Fontsize',20);
 
 
-figure;
+figure('Name','Edge Validation');
 subplot(1,2,1);imshow((GhN));title('Strong Edges','Fontsize',20);
 subplot(1,2,2);imshow(GG1);title('Validated Weak Edges by 8 way Connectivity ','Fontsize',20);
 
-figure;
+figure('Name','Final Outcome');
 subplot(1,2,1);imshow((GlN));title('Weak Edges','Fontsize',20);
 subplot(1,2,2);imshow(GG1+GlN);title('Final Appended Image','Fontsize',20);
 
@@ -496,20 +495,23 @@ for i=1:R
         if i==1 && j>=2&&j<=C-1
             l(i,j)=(c(2,2)*e(i,j)+c(2,1)*e(i,j-1)+c(2,3)*e(i,j+1)+c(3,2)*e(i+1,j)+c(3,1)*e(i+1,j-1)+c(3,3)*e(i+1,j+1));
         end
+
         if i==R && j>=2&&j<=C-1
             l(i,j)=(c(2,2)*e(i,j)+c(2,1)*e(i,j-1)+c(2,3)*e(i,j+1)+c(1,2)*e(i-1,j)+c(1,1)*e(i-1,j-1)+c(1,3)*e(i-1,j+1));
         end
+
         if i>=2 && i<=R-1 && j==1
             l(i,j)=(c(2,2)*e(i,j)+c(1,2)*e(i-1,j)+c(3,2)*e(i+1,j)+c(2,3)*e(i,j+1)+c(1,3)*e(i-1,j+1)+c(3,3)*e(i+1,j+1));
         end
+
         if i>=2 && i<=R-1 && j==C
             l(i,j)=(c(2,2)*e(i,j)+c(1,2)*e(i-1,j)+c(3,2)*e(i+1,j)+c(2,1)*e(i,j-1)+c(1,1)*e(i-1,j-1)+c(3,1)*e(i+1,j-1));
-        end
-%         
-%         
+        end 
+
         if i>=2&&i<=R-1&&j>=2&&j<=C-1
             l(i,j)=(c(2,2)*e(i,j)+c(2,1)*e(i,j-1)+c(2,3)*e(i,j+1)+c(1,1)*e(i-1,j-1)+c(1,2)*e(i-1,j)+c(1,3)*e(i-1,j+1)+c(3,1)*e(i+1,j-1)+c(3,2)*e(i+1,j)+c(3,3)*e(i+1,j+1));
         end
+        
     end  
 end
 
